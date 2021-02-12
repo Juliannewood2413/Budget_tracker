@@ -22,17 +22,17 @@ request.onerror = function (event) {
 };
 
 function saveTransaction(data) {
-    const transaction = db.transaction(["Pending"], "readWrite");
+    const transaction = db.transaction(["pending"], "readwrite");
 
-    const store = transaction.objectStore("Pending");
+    const store = transaction.objectStore("pending");
 
     store.add(data);
 };
 
 function checkDatabase() {
-    const transaction = db.transaction(["Pending"], "readWrite");
+    const transaction = db.transaction(["pending"], "readwrite");
 
-    const store = transaction.objectStore("Pending");
+    const store = transaction.objectStore("pending");
 
     const seeAll = store.getAll();
 
@@ -40,7 +40,7 @@ function checkDatabase() {
         if (seeAll.result.length > 0) {
             fetch('/api/transaction/bulk', {
                 method: "POST",
-                body: JSON.stringify(getAll.result),
+                body: JSON.stringify(seeAll.result),
                 headers: {
                     Accept: "application/json, text/plain, */*",
                     "Content-Type": "application/json"
@@ -48,7 +48,7 @@ function checkDatabase() {
             })
             .then(response => response.json())
             .then(() => {
-                const transaction = db.transaction(["Pending"], "readwrite");
+                const transaction = db.transaction(["pending"], "readwrite");
 
                 const store = transaction.objectStore('pending');
 
